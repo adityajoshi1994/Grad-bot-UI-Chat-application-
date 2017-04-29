@@ -1,11 +1,15 @@
 package com.example.adityajoshi.gradbotv2;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,8 +20,11 @@ import android.widget.TextView;
 import com.example.adityajoshi.gradbotv2.User.Profile;
 import com.example.adityajoshi.gradbotv2.channel.Channel;
 
-public class MainActivity extends AppCompatActivity {
+/**
+ * Created by adityajoshi on 4/29/17.
+ */
 
+public class HomeScreen extends AppCompatActivity{
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -26,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private HomeScreen.SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -36,11 +43,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(savedInstanceState == null)
-            setContentView(R.layout.signup);
-        else
-            onRestoreInstanceState(savedInstanceState);
-        /*
+        setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
@@ -61,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });*/
+        });
 
     }
 
@@ -105,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
+        public static MainActivity.PlaceholderFragment newInstance(int sectionNumber) {
+            MainActivity.PlaceholderFragment fragment = new MainActivity.PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
@@ -145,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                     return profile;
                 case 2:
                 default:
-                    return PlaceholderFragment.newInstance(position + 1);
+                    return MainActivity.PlaceholderFragment.newInstance(position + 1);
             }
 
         }

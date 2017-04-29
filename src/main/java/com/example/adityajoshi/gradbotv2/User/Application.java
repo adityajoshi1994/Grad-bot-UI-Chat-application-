@@ -5,4 +5,5 @@ package com.example.adityajoshi.gradbotv2.User;
  */
 
 public class Application {
+
 }

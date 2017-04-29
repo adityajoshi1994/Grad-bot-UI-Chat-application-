@@ -15,7 +15,7 @@ public class UserProfile {
     ArrayList<Education> educationHistory;
     ArrayList<Work> workExperience;
     ArrayList<Application> applications;
-
+    ArrayList<String> interests;
 
     /**
      * Initialize user instance with the following params
@@ -50,6 +50,14 @@ public class UserProfile {
         this.educationHistory = educationHistory;
     }
 
+    public void setEmailID(String emailID) {
+        this.emailID = emailID;
+    }
+
+    public void setInterests(ArrayList<String> interests) {
+        this.interests = interests;
+    }
+
     /**
      * Getter methods
      */
@@ -74,6 +82,10 @@ public class UserProfile {
         return applications;
     }
 
+    public ArrayList<String> getInterests() {
+        return interests;
+    }
+
     public String getJSON(){
         JSONUserObject jsonUserObject = new JSONUserObject();
         Gson gson = new Gson();
@@ -85,6 +97,9 @@ public class UserProfile {
 
         Type appType = new TypeToken<ArrayList<Application>>() {}.getType();
         jsonUserObject.applications = gson.toJson(workExperience,appType);
+
+        //Type interestType = new TypeToken<String>(){}.getType();
+        jsonUserObject.interests = gson.toJson(interests,String.class);
 
         jsonUserObject.emailID = emailID;
         jsonUserObject.passwd = password;
