@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="universities">Choose a University</string>
+
+    <string-array name="universities_arrays">
+        <item>UC Berkley</item>
+        <item>Stanford</item>
+        <item>UC Irvine</item>
+        <item>MIT</item>
+        <item>UCLA</item>
+        <item>UCSD</item>
+    </string-array>
+
+</resources>

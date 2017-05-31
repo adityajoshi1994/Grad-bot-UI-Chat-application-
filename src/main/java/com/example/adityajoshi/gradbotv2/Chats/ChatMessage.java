@@ -1,5 +1,9 @@
 package com.example.adityajoshi.gradbotv2.Chats;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
 /**
@@ -7,9 +11,13 @@ import java.util.Random;
  */
 
 public class ChatMessage {
-    private String body, sender, receiver;
-    public String date,time,msgID;
+    private String body, sender, receiver,cityName;
+    public String date, time, msgID;
     private boolean isMine;
+    transient DateFormat  df;
+
+
+
 
     /**
      * Instantiate a chatmessage with the following primary details.
@@ -18,12 +26,15 @@ public class ChatMessage {
      * @param messageString
      * @param isMINE
      */
-    public ChatMessage(String sender, String receiver, String messageString, boolean isMINE){
+    public ChatMessage(String sender, String receiver, String messageString, boolean isMINE) {
         this.sender = sender;
         this.receiver = receiver;
-        this.body =  messageString;
+        this.body = messageString;
         this.msgID = setMsgID();
         this.isMine = isMINE;
+        df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date today = Calendar.getInstance().getTime();
+        this.date = df.format(today);
     }
 
 
@@ -58,20 +69,40 @@ public class ChatMessage {
         return time;
     }
 
+    public String getCityName(){return cityName;}
+
     /**
      * Setter methods
      */
-    public void setBody(String body) {
-        this.body = body;
-    }
-
 
     /**
      * Set msgID using random number generation for the msg
      */
     public static String setMsgID(){
-
         return String.valueOf(new Random().nextInt(1000));
     }
+
+    public void serDate(Date date){
+        this.date = df.format(date);
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public void setReceiver(String receiver){
+        this.receiver = receiver;
+    }
+
+    public void setSender(String sender){
+        this.sender = sender;
+    }
+
+    public void setCityName(String cityName){
+        this.cityName = cityName;
+    }
+
+
+
 
 }

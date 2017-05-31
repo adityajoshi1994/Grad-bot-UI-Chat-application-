@@ -108,8 +108,8 @@ public class HomeScreen extends AppCompatActivity{
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static MainActivity.PlaceholderFragment newInstance(int sectionNumber) {
-            MainActivity.PlaceholderFragment fragment = new MainActivity.PlaceholderFragment();
+        public static HomeScreen.PlaceholderFragment newInstance(int sectionNumber) {
+            HomeScreen.PlaceholderFragment fragment = new HomeScreen.PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
@@ -148,7 +148,7 @@ public class HomeScreen extends AppCompatActivity{
                     return profile;
                 case 2:
                 default:
-                    return MainActivity.PlaceholderFragment.newInstance(position + 1);
+                    return HomeScreen.PlaceholderFragment.newInstance(position + 1);
             }
 
         }
