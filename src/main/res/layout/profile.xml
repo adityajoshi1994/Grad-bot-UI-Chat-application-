@@ -47,15 +47,31 @@
                 android:inputType="textEmailAddress"
                 android:hint="Email" />
         </android.support.design.widget.TextInputLayout>
-        <TextView
-            android:layout_width="wrap_content"
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/select_box" />
-        
-        <Button
-            android:layout_width="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/input_city"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="City" />
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- Done Button -->
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_done"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/create"/>
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="24dp"
+            android:padding="12dp"
+            android:text="Done"
+            android:background="@color/colorPrimary"
+            android:textColor="#ffffffff"/>
+
 
     </LinearLayout>
 </ScrollView>

@@ -25,6 +25,7 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".SignUpActivity" android:label="Grad Bot"/>
+        <service android:name=".notificationservice" android:exported="false"></service>
 
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>

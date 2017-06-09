@@ -3,6 +3,7 @@ package com.example.adityajoshi.gradbotv2.Chats;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 import com.example.adityajoshi.gradbotv2.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * Created by adityajoshi on 4/25/17.
@@ -21,6 +24,7 @@ import java.util.ArrayList;
 
 public class ChatAdapter extends BaseAdapter {
     private static LayoutInflater layoutInflater = null;
+    private HashSet<Character> delimiter = new HashSet<>(Arrays.asList(',','.',' ','\t','\n'));
     ArrayList<ChatMessage> messages;
 
     /**
@@ -63,7 +67,8 @@ public class ChatAdapter extends BaseAdapter {
             vi = layoutInflater.inflate(R.layout.chatbubble, null);
 
         TextView msg = (TextView) vi.findViewById(R.id.message_text);
-        msg.setText(message.getBody());
+        String displayString = getDisplayString(message);
+        msg.setText(Html.fromHtml(displayString));
         LinearLayout layout = (LinearLayout) vi
                 .findViewById(R.id.bubble_layout);
         LinearLayout parent_layout = (LinearLayout) vi
@@ -81,6 +86,24 @@ public class ChatAdapter extends BaseAdapter {
         }
         msg.setTextColor(Color.BLACK);
         return vi;
+    }
+
+    private String getDisplayString(ChatMessage message) {
+        String display = "";
+        int prev = 0,curr = 0;
+        String body = message.getBody();
+        String pre = "<font color=#3366BB>";
+        String post = "</font>";
+        String[] arr = message.getBody().split(" ");
+        for(String str: arr){
+            if(message.hashtags.contains(str)){
+                curr = body.indexOf(str);
+                display = display + body.substring(prev,curr) + pre + str + post;
+                prev = curr + str.length();
+            }
+        }
+        display = display + body.substring(prev, body.length());
+        return display;
     }
 
     /**

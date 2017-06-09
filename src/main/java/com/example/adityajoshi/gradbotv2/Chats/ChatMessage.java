@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Created by adityajoshi on 4/25/17.
@@ -13,6 +14,7 @@ import java.util.Random;
 public class ChatMessage {
     private String body, sender, receiver,cityName;
     public String date, time, msgID;
+    Set<String> hashtags;
     private boolean isMine;
     transient DateFormat  df;
 
@@ -26,7 +28,7 @@ public class ChatMessage {
      * @param messageString
      * @param isMINE
      */
-    public ChatMessage(String sender, String receiver, String messageString, boolean isMINE) {
+    public ChatMessage(String sender, String senderLocation, String receiver, String messageString, boolean isMINE, Set<String>hashtags) {
         this.sender = sender;
         this.receiver = receiver;
         this.body = messageString;
@@ -35,6 +37,8 @@ public class ChatMessage {
         df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         Date today = Calendar.getInstance().getTime();
         this.date = df.format(today);
+        this.cityName = senderLocation;
+        this.hashtags = hashtags;
     }
 
 

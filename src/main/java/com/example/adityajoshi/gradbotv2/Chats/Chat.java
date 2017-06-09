@@ -1,8 +1,7 @@
 package com.example.adityajoshi.gradbotv2.Chats;
 
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
@@ -11,13 +10,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.adityajoshi.gradbotv2.R;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by adityajoshi on 4/24/17.
@@ -27,7 +26,8 @@ public class Chat extends AppCompatActivity implements View.OnClickListener, Loc
 
     String channelName = "";
     ChatAdapter chatAdapter;
-    String cityName = "";
+    SharedPreferences sharedPreferences;
+
     /**
      * Renders Channel UI
      * @param savedInstanceState
@@ -36,10 +36,8 @@ public class Chat extends AppCompatActivity implements View.OnClickListener, Loc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_layout);
-        chatAdapter = new ChatAdapter(this,new ArrayList<ChatMessage>());
+        chatAdapter = new ChatAdapter(this, new ArrayList<ChatMessage>());
         prepareChatWindow();
-
-
     }
 
     /**
@@ -60,6 +58,7 @@ public class Chat extends AppCompatActivity implements View.OnClickListener, Loc
         //Set send button
         ImageButton sendButton = (ImageButton) view.findViewById(R.id.sendMessageButton);
         sendButton.setOnClickListener(this);
+        sharedPreferences = getSharedPreferences("Preferences", MODE_PRIVATE);
     }
 
     /**
@@ -81,32 +80,31 @@ public class Chat extends AppCompatActivity implements View.OnClickListener, Loc
     public void sendTextMessage(View v){
         EditText editText = (EditText) findViewById(R.id.messageEditText);
         String message = editText.getEditableText().toString();
+        Set<String> hashTags =  getHashTags(message);
         if(!message.equals("")){
-            ChatMessage chatMessage = new ChatMessage("user",channelName,message,true);
+            ChatMessage chatMessage = new ChatMessage(sharedPreferences.getString("Name",""),sharedPreferences.getString("City",""),channelName,message,true,hashTags);
             chatAdapter.add(chatMessage);
             chatAdapter.notifyDataSetChanged();
             editText.setText("");
-            new MessageTransporter().execute("http://10.0.2.2:8080/publishServer/service/format",chatMessage);
+            new MessageTransporter().execute("http://192.168.0.9:8080/publishServer/service/format",chatMessage);
         }
-
     }
+
+    private Set<String> getHashTags(String message) {
+        String[] arr = message.split(" ");
+        HashSet<String> set = new HashSet<>();
+        for(String str: arr){
+            if(str.startsWith("#"))
+                set.add(str);
+        }
+        return set;
+    }
+
 
     @Override
     public void onLocationChanged(Location location) {
-
-        Geocoder gcd = new Geocoder(getBaseContext(), Locale.getDefault());
-        List<Address> addresses;
-        try {
-            addresses = gcd.getFromLocation(location.getLatitude(),
-                    location.getLongitude(), 1);
-            if (addresses.size() > 0) {
-                System.out.println(addresses.get(0).getLocality());
-                cityName = addresses.get(0).getLocality();
-            }
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        //getLcoation(location);
+        Toast.makeText(getApplicationContext(),location.getLatitude()+"",Toast.LENGTH_LONG).show();
     }
 
     @Override

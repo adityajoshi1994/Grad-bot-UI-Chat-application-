@@ -1,148 +1,141 @@
 package com.example.adityajoshi.gradbotv2.User;
 
-import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
+import android.Manifest;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.EditText;
 import android.widget.PopupWindow;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.adityajoshi.gradbotv2.R;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
+import static android.content.Context.LOCATION_SERVICE;
 
 /**
  * Created by adityajoshi on 4/29/17.
  */
 
-public class Profile extends Fragment{
+public class Profile extends Fragment implements LocationListener, View.OnClickListener {
     private PopupWindow pw;
-    private boolean expanded;
-    public static boolean[] checkSelected;
+    private String cityName = "";
     View view;
+    EditText city,name,email;
+    SharedPreferences.Editor editor;
+    SharedPreferences sharedPreferences;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.profile,container,false);
-        initialize();
+        view = inflater.inflate(R.layout.profile, container, false);
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+
+        //Log.i("City Name", "Inside");
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return view;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 5, this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 5, this);
+        city = (EditText) view.findViewById(R.id.input_city);
+        email = (EditText) view.findViewById(R.id.input_email);
+        name = (EditText) view.findViewById(R.id.input_name);
+        city.setText("");
+        sharedPreferences = getActivity().getSharedPreferences("Preferences",getActivity().MODE_PRIVATE);
+        editor =  sharedPreferences.edit();
+        name.setText(sharedPreferences.getString("Name",""));
+        email.setText(sharedPreferences.getString("Email",""));
+        //editor.clear();
+        Button done = (Button) view.findViewById(R.id.btn_done);
+        done.setOnClickListener(this);
         return view;
     }
 
-    /*
-     * Function to set up initial settings: Creating the data source for drop-down list, initialising the checkselected[], set the drop-down list
-     * */
-    private void initialize(){
-        //data source for drop-down list
-        final ArrayList<String> items = new ArrayList<String>();
-        items.add("Item 1");
-        items.add("Item 2");
-        items.add("Item 3");
-        items.add("Item 4");
-        items.add("Item 5");
 
-        checkSelected = new boolean[items.size()];
-        //initialize all values of list to 'unselected' initially
-        for (int i = 0; i < checkSelected.length; i++) {
-            checkSelected[i] = false;
+    public void getLcoation(Location location){
+        Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
+        List<Address> addresses;
+        //Log.i("City Name1",location.getLatitude() + " " + location.getLongitude());
+        try {
+            addresses = gcd.getFromLocation(location.getLatitude(),
+                    location.getLongitude(), 1);
+            if (addresses != null) {
+                //System.out.println(addresses.get(0).getLocality());
+                cityName = addresses.get(0).getLocality() + ", " + addresses.get(0).getCountryName();
+                //Log.i("City Name",cityName);
+                if(city.getText().toString().equals(""))
+                    city.setText(cityName);
+
+            }
         }
-
-	/*SelectBox is the TextView where the selected values will be displayed in the form of "Item 1 & 'n' more".
-    	 * When this selectBox is clicked it will display all the selected values
-    	 * and when clicked again it will display in shortened representation as before.
-    	 * */
-        final TextView tv = (TextView) view.findViewById(R.id.select_box);
-        tv.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                if(!expanded){
-                    //display all selected values
-                    String selected = "";
-                    int flag = 0;
-                    for (int i = 0; i < items.size(); i++) {
-                        if (checkSelected[i] == true) {
-                            selected += items.get(i);
-                            selected += ", ";
-                            flag = 1;
-                        }
-                    }
-                    if(flag==1)
-                        tv.setText(selected);
-                    expanded =true;
-                }
-                else{
-                    //display shortened representation of selected values
-                    tv.setText(DropDownListAdapter.getSelected());
-                    expanded = false;
-                }
-            }
-        });
-
-        //onClickListener to initiate the dropDown list
-        Button createButton = (Button)view.findViewById(R.id.create);
-        createButton.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                initiatePopUp(items,tv);
-            }
-        });
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    /*
-     * Function to set up the pop-up window which acts as drop-down list
-     * */
-    private void initiatePopUp(ArrayList<String> items, TextView tv){
-        LayoutInflater inflater = (LayoutInflater)this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        //get the pop-up window i.e.  drop-down layout
-        LinearLayout layout = (LinearLayout)inflater.inflate(R.layout.popup_window, (ViewGroup)view.findViewById(R.id.PopUpView));
-
-        //get the view to which drop-down layout is to be anchored
-        LinearLayout layout1 = (LinearLayout)view.findViewById(R.id.ProfileLayout);
-        pw = new PopupWindow(layout, LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, true);
-
-        //Pop-up window background cannot be null if we want the pop-up to listen touch events outside its window
-        pw.setBackgroundDrawable(new BitmapDrawable());
-        pw.setTouchable(true);
-
-        //let pop-up be informed about touch events outside its window. This  should be done before setting the content of pop-up
-        pw.setOutsideTouchable(true);
-        pw.setHeight(LayoutParams.WRAP_CONTENT);
-
-        //dismiss the pop-up i.e. drop-down when touched anywhere outside the pop-up
-        pw.setTouchInterceptor(new View.OnTouchListener() {
-
-            public boolean onTouch(View v, MotionEvent event) {
-                // TODO Auto-generated method stub
-                if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-                    pw.dismiss();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        //provide the source layout for drop-down
-        pw.setContentView(layout);
-
-        //anchor the drop-down to bottom-left corner of 'layout1'
-        pw.showAsDropDown(layout1);
-
-        //populate the drop-down list
-        final ListView list = (ListView) layout.findViewById(R.id.dropDownList);
-        DropDownListAdapter adapter = new DropDownListAdapter(this.getActivity(), items, tv);
-        list.setAdapter(adapter);
+    private void writeInSharedPreferences(){
+        editor.putString("Name", name.getText().toString());
+        editor.putString("Email", email.getText().toString());
+        editor.putString("City", city.getText().toString());
+        editor.commit();
+        Log.i("Shared Preferences", "Written in shared preferences");
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        getLcoation(location);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(!checkIfFormFilled()){
+            Toast.makeText(getContext(),"All fields not filled",Toast.LENGTH_LONG).show();
+            return;
+        }
+        writeInSharedPreferences();
+    }
+
+    private boolean checkIfFormFilled() {
+        if(name.getText().toString().equals("") || email.getText().toString().equals("") || !email.getText().toString().contains("@") ||
+                !email.getText().toString().contains(".") || city.getText().toString().equals(""))
+            return false;
+        return true;
+    }
 }

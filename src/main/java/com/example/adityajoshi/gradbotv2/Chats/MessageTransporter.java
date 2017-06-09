@@ -32,6 +32,8 @@ public class MessageTransporter extends AsyncTask<Object,Object,Object>{
             ChatMessage cm = (ChatMessage) params[1];
             Gson gson = new Gson();
             String json = gson.toJson(cm);
+            json = "{\"Type\":\"Android\",\"Payload\":" + json + "}";
+            System.out.println(json);
             outputStream.write(json);
             outputStream.flush();
 
