@@ -1,6 +1,8 @@
 package com.example.adityajoshi.gradbotv2.channel;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,6 +27,7 @@ public class Channel extends Fragment implements AdapterView.OnItemClickListener
 
     ArrayAdapter<String> adapter;
     ArrayList<String> subscribedChannels = new ArrayList<String>();
+    SharedPreferences sharedPreferences;
     /**
      * Get subscribed channels and displays Channels layout which is a list of subscribed channels
      * @param inflater
@@ -39,7 +42,7 @@ public class Channel extends Fragment implements AdapterView.OnItemClickListener
         adapter=new ArrayAdapter<String>(this.getActivity(),
                 android.R.layout.simple_list_item_1,
                 subscribedChannels);
-
+        sharedPreferences = getActivity().getSharedPreferences("Preferences", Context.MODE_PRIVATE);
         getSubscribedChannels();
         ListView listView = (ListView) view.findViewById(R.id.listView);
         listView.setAdapter(adapter);
@@ -55,8 +58,9 @@ public class Channel extends Fragment implements AdapterView.OnItemClickListener
      * Get a list of subscribed channels
      */
     private void getSubscribedChannels(){
-        for(int i = 1;i < 5;i++){
-            subscribedChannels.add("Channel " + i);
+        String[] arr = sharedPreferences.getString("Channels","").split(",");
+        for(int i = 0;i < arr.length;i++){
+            subscribedChannels.add(arr[i]);
             adapter.notifyDataSetChanged();
         }
     }

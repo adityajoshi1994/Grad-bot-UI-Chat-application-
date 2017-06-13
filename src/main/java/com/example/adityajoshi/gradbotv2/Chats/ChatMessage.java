@@ -75,6 +75,10 @@ public class ChatMessage {
 
     public String getCityName(){return cityName;}
 
+    public Set<String> getHashtags() {
+        return hashtags;
+    }
+
     /**
      * Setter methods
      */
@@ -104,6 +108,10 @@ public class ChatMessage {
 
     public void setCityName(String cityName){
         this.cityName = cityName;
+    }
+
+    public void setMine(boolean isMine){
+        this.isMine = isMine;
     }
 
 

@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
     SharedPreferences.Editor editor;
-    EditText displayName,email,password,confirmPassword;
+    EditText displayName,email,password,confirmPassword,channels;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +27,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         email = (EditText) findViewById(R.id.signup_email);
         password = (EditText) findViewById(R.id.signup_password);
         confirmPassword = (EditText) findViewById(R.id.signup_password);
+        channels = (EditText) findViewById(R.id.signup_channels);
         createAccount.setOnClickListener(this);
     }
 
@@ -36,6 +37,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         editor.putString("Name",displayName.getText().toString());
         editor.putString("Email",email.getText().toString());
         editor.putString("Password",password.getText().toString());
+        editor.putString("Channels",channels.getText().toString() + ",General");
+        //String[] splt = channels.getText().toString().split(",");
+//        for (String str: splt){
+//            editor.putStringSet(str,null);
+//        }
         editor.commit();
         Toast.makeText(this,"Account Created",Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getApplicationContext(),HomeScreen.class);

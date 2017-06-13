@@ -90,6 +90,9 @@ public class ChatAdapter extends BaseAdapter {
 
     private String getDisplayString(ChatMessage message) {
         String display = "";
+        if(!message.getisMine()){
+            display = "<b>" + message.getSender() + ": " + "</b>";
+        }
         int prev = 0,curr = 0;
         String body = message.getBody();
         String pre = "<font color=#3366BB>";

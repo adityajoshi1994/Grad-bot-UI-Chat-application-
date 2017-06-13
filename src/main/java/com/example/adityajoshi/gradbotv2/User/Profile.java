@@ -85,8 +85,12 @@ public class Profile extends Fragment implements LocationListener, View.OnClickL
                 //System.out.println(addresses.get(0).getLocality());
                 cityName = addresses.get(0).getLocality() + ", " + addresses.get(0).getCountryName();
                 //Log.i("City Name",cityName);
-                if(city.getText().toString().equals(""))
+                if(city.getText().toString().equals("")){
                     city.setText(cityName);
+                    editor.putString("City",cityName);
+                    editor.commit();
+                }
+
 
             }
         }

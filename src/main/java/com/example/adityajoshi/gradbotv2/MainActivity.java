@@ -8,11 +8,11 @@ import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     SharedPreferences sharedPreferences;
     EditText email,password;
+    public MessageReceiver messageReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,9 +44,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         email = (EditText) findViewById(R.id.login_email);
         password = (EditText) findViewById(R.id.login_password);
         sharedPreferences = getSharedPreferences("Preferences",MODE_PRIVATE);
-        startService(new Intent(this,notificationservice.class));
+
 
     }
+
+
+
 
 
     @Override
@@ -58,16 +61,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.btn_login:
-                if(email.getText().toString().equals(sharedPreferences.getString("Email",""))){
-                    if(password.getText().toString().equals(sharedPreferences.getString("Password",""))){
+                //if(email.getText().toString().equals(sharedPreferences.getString("Email",""))){
+                  //  if(password.getText().toString().equals(sharedPreferences.getString("Password",""))){
                         intent = new Intent(getApplicationContext(),HomeScreen.class);
                         startActivity(intent);
-                    }
-                    else
-                        Toast.makeText(this,"Invalid Password",Toast.LENGTH_LONG).show();
+                    //}
+                    //else
+                      //  Toast.makeText(this,"Invalid Password",Toast.LENGTH_LONG).show();
 
-                }else
-                    Toast.makeText(this,"EmailID does not exist",Toast.LENGTH_LONG).show();
+                //}else
+                  //  Toast.makeText(this,"EmailID does not exist",Toast.LENGTH_LONG).show();
                 break;
 
         }

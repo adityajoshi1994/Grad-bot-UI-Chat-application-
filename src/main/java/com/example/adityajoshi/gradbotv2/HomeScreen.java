@@ -1,6 +1,8 @@
 package com.example.adityajoshi.gradbotv2;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -16,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.adityajoshi.gradbotv2.User.Profile;
 import com.example.adityajoshi.gradbotv2.channel.Channel;
@@ -39,6 +42,8 @@ public class HomeScreen extends AppCompatActivity{
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+
+    public MessageReceiver messageReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +70,9 @@ public class HomeScreen extends AppCompatActivity{
                         .setAction("Action", null).show();
             }
         });
+
+        setupServiceReceiver();
+        onStartService();
 
     }
 
@@ -172,4 +180,31 @@ public class HomeScreen extends AppCompatActivity{
             return null;
         }
     }
+
+    // Starts the IntentService
+    public void onStartService() {
+        Intent i = new Intent(this, notificationservice.class);
+        i.putExtra("receiver", messageReceiver);
+        startService(i);
+    }
+
+    // Setup the callback for when data is received from the service
+    public void setupServiceReceiver() {
+        messageReceiver = new MessageReceiver(new Handler());
+        // This is where we specify what happens when data is received from the service
+        messageReceiver.setReceiver(new MessageReceiver.Receiver() {
+            @Override
+            public void onReceiveResult(int resultCode, Bundle resultData) {
+                if (resultCode == RESULT_OK) {
+                    String resultValue = resultData.getString("resultValue");
+                    Toast.makeText(HomeScreen.this, resultValue, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+
+
+
+
 }
