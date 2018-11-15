@@ -1,7 +1,7 @@
 # Grad-bot-UI-Chat-application
 
 This project is an attempt to aid all the graduate students or anyone for that matter who seeks to take addmission in a university.
-It pulls live twitter feeds of subscribed topics and displays them in its own chat. Besides this you can also group/one-one chat
+It pulls live twitter feeds of subscribed topics and displays them in its own chat so that you can keep track of whats going on in the universities without having to be present there physically. Besides this you can also group/one-one chat 
 with people on this app. Behind the scenes it uses Apache Kafka as a middleware to implement the pub-sub model.
 
 <h2> What is Apache Kafka?</h2>
